@@ -3,6 +3,9 @@ part of persistent_bottom_nav_bar_v2;
 class PersistentBottomNavBar extends StatelessWidget {
   final EdgeInsets? margin;
   final bool? confineToSafeArea;
+  final bool showInTop;
+  final Widget topWidget;
+  final Widget bottomWidget;
   final Widget Function(NavBarEssentials navBarEssentials)? customNavBarWidget;
   final bool? hideNavigationBar;
   final Function(bool, bool)? onAnimationComplete;
@@ -14,6 +17,9 @@ class PersistentBottomNavBar extends StatelessWidget {
 
   const PersistentBottomNavBar({
     Key? key,
+    required this.showInTop,
+    required this.topWidget,
+    required this.bottomWidget ,
     this.margin,
     this.confineToSafeArea,
     this.customNavBarWidget,
@@ -26,126 +32,107 @@ class PersistentBottomNavBar extends StatelessWidget {
     this.isCustomWidget = false,
   }) : super(key: key);
 
-  Widget _navBarWidget() => Padding(
-        padding: this.margin!,
-        child: isCustomWidget!
-            ? this.margin!.bottom > 0
-                ? SafeArea(
-                    top: false,
-                    bottom: this.navBarEssentials!.navBarHeight == 0.0 ||
-                            (this.hideNavigationBar ?? false)
-                        ? false
-                        : confineToSafeArea ?? true,
-                    child: Container(
-                      color: this.navBarEssentials!.backgroundColor,
-                      height: this.navBarEssentials!.navBarHeight,
-                      child:
-                          this.customNavBarWidget?.call(this.navBarEssentials!),
-                    ),
-                  )
-                : Container(
-                    color: this.navBarEssentials!.backgroundColor,
-                    child: SafeArea(
-                      top: false,
-                      bottom: this.navBarEssentials!.navBarHeight == 0.0 ||
-                              (this.hideNavigationBar ?? false)
-                          ? false
-                          : confineToSafeArea ?? true,
-                      child: Container(
-                        height: this.navBarEssentials!.navBarHeight,
-                        child: this
-                            .customNavBarWidget
-                            ?.call(this.navBarEssentials!),
-                      ),
-                    ),
-                  )
-            : this.navBarStyle == NavBarStyle.style15 ||
-                    this.navBarStyle == NavBarStyle.style16
+  Widget _navBarWidget() => Column(
+        mainAxisAlignment: this.showInTop ? MainAxisAlignment.start :  MainAxisAlignment.end,
+        children: [
+          this.topWidget  ,
+          Padding(
+            padding: this.margin!,
+            child: isCustomWidget!
                 ? this.margin!.bottom > 0
                     ? SafeArea(
                         top: false,
-                        right: false,
-                        left: false,
-                        bottom: this.navBarEssentials!.navBarHeight == 0.0 ||
-                                (this.hideNavigationBar ?? false)
+                        bottom: this.navBarEssentials!.navBarHeight == 0.0 || (this.hideNavigationBar ?? false)
                             ? false
                             : confineToSafeArea ?? true,
                         child: Container(
-                          decoration: getNavBarDecoration(
-                            decoration: this.navBarDecoration,
-                            color: this.navBarEssentials!.backgroundColor,
-                            opacity: this
-                                .navBarEssentials!
-                                .items![this.navBarEssentials!.selectedIndex!]
-                                .opacity,
-                          ),
-                          child: getNavBarStyle(),
+                          color: this.navBarEssentials!.backgroundColor,
+                          height: this.navBarEssentials!.navBarHeight,
+                          child: this.customNavBarWidget?.call(this.navBarEssentials!),
                         ),
                       )
                     : Container(
-                        decoration: getNavBarDecoration(
-                          decoration: this.navBarDecoration,
-                          color: this.navBarEssentials!.backgroundColor,
-                          opacity: this
-                              .navBarEssentials!
-                              .items![this.navBarEssentials!.selectedIndex!]
-                              .opacity,
-                        ),
+                        color: this.navBarEssentials!.backgroundColor,
                         child: SafeArea(
                           top: false,
-                          right: false,
-                          left: false,
-                          bottom: this.navBarEssentials!.navBarHeight == 0.0 ||
-                                  (this.hideNavigationBar ?? false)
+                          bottom: this.navBarEssentials!.navBarHeight == 0.0 || (this.hideNavigationBar ?? false)
                               ? false
                               : confineToSafeArea ?? true,
-                          child: getNavBarStyle()!,
+                          child: Container(
+                            height: this.navBarEssentials!.navBarHeight,
+                            child: this.customNavBarWidget?.call(this.navBarEssentials!),
+                          ),
                         ),
                       )
-                : Container(
-                    decoration: getNavBarDecoration(
-                      decoration: this.navBarDecoration,
-                      showBorder: false,
-                      color: this.navBarEssentials!.backgroundColor,
-                      opacity: this
-                          .navBarEssentials!
-                          .items![this.navBarEssentials!.selectedIndex!]
-                          .opacity,
-                    ),
-                    child: ClipRRect(
-                      borderRadius: this.navBarDecoration!.borderRadius ??
-                          BorderRadius.zero,
-                      child: BackdropFilter(
-                        filter: this
-                                .navBarEssentials!
-                                .items![this.navBarEssentials!.selectedIndex!]
-                                .filter ??
-                            ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
-                        child: Container(
-                          decoration: getNavBarDecoration(
-                            showOpacity: false,
-                            decoration: navBarDecoration,
-                            color: this.navBarEssentials!.backgroundColor,
-                            opacity: this
-                                .navBarEssentials!
-                                .items![this.navBarEssentials!.selectedIndex!]
-                                .opacity,
-                          ),
-                          child: SafeArea(
+                : this.navBarStyle == NavBarStyle.style15 || this.navBarStyle == NavBarStyle.style16
+                    ? this.margin!.bottom > 0
+                        ? SafeArea(
                             top: false,
                             right: false,
                             left: false,
-                            bottom:
-                                this.navBarEssentials!.navBarHeight == 0.0 ||
-                                        (this.hideNavigationBar ?? false)
+                            bottom: this.navBarEssentials!.navBarHeight == 0.0 || (this.hideNavigationBar ?? false)
+                                ? false
+                                : confineToSafeArea ?? true,
+                            child: Container(
+                              decoration: getNavBarDecoration(
+                                decoration: this.navBarDecoration,
+                                color: this.navBarEssentials!.backgroundColor,
+                                opacity: this.navBarEssentials!.items![this.navBarEssentials!.selectedIndex!].opacity,
+                              ),
+                              child: getNavBarStyle(),
+                            ),
+                          )
+                        : Container(
+                            decoration: getNavBarDecoration(
+                              decoration: this.navBarDecoration,
+                              color: this.navBarEssentials!.backgroundColor,
+                              opacity: this.navBarEssentials!.items![this.navBarEssentials!.selectedIndex!].opacity,
+                            ),
+                            child: SafeArea(
+                              top: false,
+                              right: false,
+                              left: false,
+                              bottom: this.navBarEssentials!.navBarHeight == 0.0 || (this.hideNavigationBar ?? false)
+                                  ? false
+                                  : confineToSafeArea ?? true,
+                              child: getNavBarStyle()!,
+                            ),
+                          )
+                    : Container(
+                        decoration: getNavBarDecoration(
+                          decoration: this.navBarDecoration,
+                          showBorder: false,
+                          color: this.navBarEssentials!.backgroundColor,
+                          opacity: this.navBarEssentials!.items![this.navBarEssentials!.selectedIndex!].opacity,
+                        ),
+                        child: ClipRRect(
+                          borderRadius: this.navBarDecoration!.borderRadius ?? BorderRadius.zero,
+                          child: BackdropFilter(
+                            filter: this.navBarEssentials!.items![this.navBarEssentials!.selectedIndex!].filter ??
+                                ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+                            child: Container(
+                              decoration: getNavBarDecoration(
+                                showOpacity: false,
+                                decoration: navBarDecoration,
+                                color: this.navBarEssentials!.backgroundColor,
+                                opacity: this.navBarEssentials!.items![this.navBarEssentials!.selectedIndex!].opacity,
+                              ),
+                              child: SafeArea(
+                                top: false,
+                                right: false,
+                                left: false,
+                                bottom: this.navBarEssentials!.navBarHeight == 0.0 || (this.hideNavigationBar ?? false)
                                     ? false
                                     : confineToSafeArea ?? true,
-                            child: getNavBarStyle()!,
+                                child: getNavBarStyle()!,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
+          ),
+          this.bottomWidget  ,
+        ],
       );
 
   @override
@@ -165,6 +152,9 @@ class PersistentBottomNavBar extends StatelessWidget {
   PersistentBottomNavBar copyWith({
     EdgeInsets? margin,
     bool? confineToSafeArea,
+    bool showInTop  = false ,
+    Widget? topWidget,
+    Widget? bottomWidget,
     Widget Function(NavBarEssentials)? customNavBarWidget,
     bool? hideNavigationBar,
     Function(bool, bool)? onAnimationComplete,
@@ -175,6 +165,7 @@ class PersistentBottomNavBar extends StatelessWidget {
     bool? isCustomWidget,
   }) =>
       PersistentBottomNavBar(
+        bottomWidget: bottomWidget ?? SizedBox(),
         margin: margin ?? this.margin,
         confineToSafeArea: confineToSafeArea ?? this.confineToSafeArea,
         customNavBarWidget: customNavBarWidget ?? this.customNavBarWidget,
@@ -185,12 +176,12 @@ class PersistentBottomNavBar extends StatelessWidget {
         navBarDecoration: navBarDecoration ?? this.navBarDecoration,
         navBarStyle: navBarStyle ?? this.navBarStyle,
         isCustomWidget: isCustomWidget ?? this.isCustomWidget,
+        topWidget: topWidget ?? SizedBox(),
+        showInTop: showInTop ,
       );
 
   bool opaque(int? index) {
-    return this.navBarEssentials!.items == null
-        ? true
-        : !(this.navBarEssentials!.items![index!].opacity < 1.0);
+    return this.navBarEssentials!.items == null ? true : !(this.navBarEssentials!.items![index!].opacity < 1.0);
   }
 
   Widget? getNavBarStyle() {

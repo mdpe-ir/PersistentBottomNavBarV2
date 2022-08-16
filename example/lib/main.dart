@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
-import 'package:persistent_bottom_nav_bar_v2_example_project/interactive_example.dart';
 import 'package:persistent_bottom_nav_bar_v2_example_project/modal-screen.dart';
 import 'package:persistent_bottom_nav_bar_v2_example_project/screens.dart';
 
@@ -60,15 +59,7 @@ class _MainMenuState extends State<MainMenu> {
             ),
           ),
           SizedBox(height: 20.0),
-          Center(
-            child: ElevatedButton(
-              child: Text("Interactive Example"),
-              onPressed: () => pushNewScreen(
-                context,
-                screen: InteractiveExample(),
-              ),
-            ),
-          ),
+
         ],
       ),
     );
@@ -144,7 +135,7 @@ class _ProvidedStyleExampleState extends State<ProvidedStyleExample> {
     return [
       PersistentBottomNavBarItem(
         icon: Icon(Icons.home),
-        title: "Home",
+        title: "p",
         activeColorPrimary: Colors.blue,
         inactiveColorPrimary: Colors.grey,
         inactiveColorSecondary: Colors.purple,
@@ -224,6 +215,17 @@ class _ProvidedStyleExampleState extends State<ProvidedStyleExample> {
       ),
       body: PersistentTabView(
         context,
+       showInTop: true,
+       topWidget: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 60,
+          color: Colors.black,
+        ),
+        bottomWidget: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 60,
+          color: Colors.black,
+        ) ,
         controller: _controller,
         screens: _buildScreens(),
         items: _navBarsItems(),

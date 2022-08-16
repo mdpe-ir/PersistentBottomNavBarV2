@@ -2,11 +2,17 @@ part of persistent_bottom_nav_bar_v2;
 
 /// An item widget for the `PersistentTabView`.
 class PersistentBottomNavBarItem {
+  /// Show navbar in top or bottom of screen
+  final bool showInTop;
+
   /// Icon for the bar item.
   final Widget icon;
 
   /// In-Active icon for the bar item.
   final Widget? inactiveIcon;
+
+  /// A Widget above of the navigation bar | it will use for mini players
+  final Widget? topWidget;
 
   /// Title for the bar item. Might not appear is some `styles`.
   final String? title;
@@ -58,6 +64,8 @@ class PersistentBottomNavBarItem {
   PersistentBottomNavBarItem(
       {required this.icon,
       this.inactiveIcon,
+      this.showInTop = false,
+      this.topWidget = const SizedBox(),
       this.title,
       this.contentPadding = 5.0,
       this.activeColorPrimary = CupertinoColors.activeBlue,
